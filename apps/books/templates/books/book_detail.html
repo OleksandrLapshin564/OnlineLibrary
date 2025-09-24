@@ -1,0 +1,56 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            {% if book.cover %}
+                <img src="{{ book.cover.url }}" class="img-fluid rounded shadow-sm mb-3" alt="{{ book.title }}">
+            {% else %}
+                <img src="{% static 'images/no_cover.png' %}" class="img-fluid rounded shadow-sm mb-3" alt="No cover available">
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <h1 class="mb-3">{{ book.title }}</h1>
+
+            {% if book.authors.exists %}
+                <div class="mb-2">
+                    <strong>Authors:</strong>
+                    <ul>
+                        {% for author in book.authors.all %}
+                            <li><strong>{{ author.name }}</strong> – {{ author.bio }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            {% if book.genres.exists %}
+                <p><strong>Genres:</strong> {{ book.genres.all|join:", " }}</p>
+            {% endif %}
+
+            {% if book.description %}
+                <div class="mb-3">
+                    <strong>Description:</strong>
+                    <p>{{ book.description }}</p>
+                </div>
+            {% endif %}
+
+            {% if book.text_file %}
+                <p>
+                    📄 <a href="{{ book.text_file.url }}" target="_blank" class="btn btn-outline-secondary">Download book file</a>
+                </p>
+            {% endif %}
+
+            <p class="text-muted">
+                Added: {{ book.created_at|date:"d.m.Y H:i" }}
+                {% if book.updated_at %}
+                    | Updated: {{ book.updated_at|date:"d.m.Y H:i" }}
+                {% endif %}
+            </p>
+
+            <a href="{% url 'books:book_list' %}" class="btn btn-secondary mt-3">⬅ Back to catalog</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

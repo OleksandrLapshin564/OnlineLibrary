@@ -1,0 +1,49 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">📚 Catalog of Books</h1>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for book in books %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    {% if book.cover %}
+                        <img src="{{ book.cover.url }}" class="card-img-top" alt="{{ book.title }}">
+                    {% else %}
+                        <img src="{% static 'images/no_cover.png' %}" class="card-img-top" alt="No cover for {{ book.title }}">
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        <p class="card-text flex-grow-1">
+                            {% if book.description %}
+                                {{ book.description|truncatechars:120 }}
+                            {% else %}
+                                Description missing
+                            {% endif %}
+                        </p>
+                        <p class="mb-2">
+                            {% if book.authors.exists %}
+                                <strong>Authors:</strong>
+                                {% for author in book.authors.all %}
+                                    {{ author.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </p>
+                        <a href="{% url 'books:book_detail' book.pk %}" class="btn btn-primary mt-auto">More details</a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Added: {{ book.created_at|date:"d.m.Y" }}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    No books available at the moment.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
