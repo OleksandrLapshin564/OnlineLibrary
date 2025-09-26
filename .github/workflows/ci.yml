@@ -1,0 +1,11 @@
+name: Minimal CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Say Hello
+        run: echo "CI workflow is running successfully!"
