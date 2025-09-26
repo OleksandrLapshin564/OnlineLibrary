@@ -1,84 +1,100 @@
-# Online Library 📚
+# Online Library — Exam Project
 
-**Online Library** is a web application that allows users to search, read, and discuss books online. It includes both a user-facing interface and an admin panel for managing books and users. The project is built with **Django** and runs inside **Docker** containers.
+## 1. Running the Project via Docker
 
----
-
-## Features
-
-### User Section
-- **User Registration**: Sign up with full name, city, country, email, nickname, and password.
-- **Book Search**: Search books by title, author, or genre with filtering and sorting.
-- **Read Online**: Read books directly in the browser, with reading progress saved.
-- **Discussion**: Leave comments and participate in book discussions.
-
-### Admin Section
-- **Add Books**: Admin can add books with title, author, genre, description, and text file.
-- **Edit Books**: Admin can update book information and text files.
-- **Block Users**: Admin can block users violating rules.
-- **Delete Comments**: Admin can remove inappropriate comments.
-
----
-
-## Installation and Docker Setup
-
-1. Clone the repository:
+1. Create a `.env` file in the project root with database and Django settings (as in `settings.py`).
+2. Start the database container:
 ```bash
-git clone https://github.com/YourUsername/OnlineLibrary.git
-cd OnlineLibrary
-2. Build and start Docker containers:
-docker-compose up -d --build
-3. Check running containers:
+docker-compose up -d db
+3. Start the web container:
+docker-compose up -d web
+4. Check that the containers are running:
 docker ps
-You should see containers onlinelibrary-web-1 (port 8080) and onlinelibrary-db-1 (port 5433).
-4. Open your browser at: http://localhost:8080
-URLs / Endpoints
-Page / Endpoint	URL	Description
-Home	/	Homepage or landing page
-Catalog of Books	/books/	List of all published books
-Book Details	/books/<id>/	Detailed view of a specific book by ID
-Admin Panel	/admin/	Django admin panel
-User Login	/users/login/	Login page for registered users
-User Logout	/users/logout/	Logout page
-Media Files	/media/<path>	Access uploaded book covers or text files
+2. Migrations and Superuser Creation
+# Make migrations
+docker exec -it onlinelibrary-web-1 python manage.py makemigrations
 
-Note: Use trailing slashes (/books/) to avoid 404 errors.
-Development
-Make sure you have Python 3.9+, Docker, and Docker Compose installed.
-Activate virtual environment for local scripts:
-python -m venv .venv
-source .venv/Scripts/activate  # Windows
-install dependencies:
-pip install -r requirements.txt
-Run Django development server (inside Docker container):
-docker exec -it onlinelibrary-web-1 bash
-python manage.py runserver 0.0.0.0:8000
-Database
+# Apply migrations
+docker exec -it onlinelibrary-web-1 python manage.py migrate
 
-PostgreSQL is used as the database (container onlinelibrary-db-1 on port 5433).
+# Create a superuser
+docker exec -it onlinelibrary-web-1 python manage.py createsuperuser
+3. Generate API Token
+docker exec -it onlinelibrary-web-1 python manage.py drf_create_token <username>
+Example output:
+Generated token 74d99a7c883d6c9671cd542f8ccb1e4d1d08beec for user alex_admin2
+4. Using the API
+Include the token in the request header.
+Endpoints Table
+Endpoint	Method	Description	Example Request (curl)
+/books/	GET	List all books in the catalog	curl -H "Authorization: Token 74d99a7c883d6c9671cd542f8ccb1e4d1d08beec" http://localhost:8080/books/
+/books/{id}/	GET	Get details of a book by its ID	curl -H "Authorization: Token 74d99a7c883d6c9671cd542f8ccb1e4d1d08beec" http://localhost:8080/books/1/
 
-Media files (book covers and text files) are stored in /media/.
-Authors
+Notes:
 
-Robin Nixon – Web developer and educator.
+Replace {id} with the actual book ID (e.g., 1, 2, 3).
 
-Paul McFedries – Technical writer.
+Token authentication is required for all API requests.
 
-David McFarland – Web developer, teacher, author.
+Currently, the endpoints return HTML pages. JSON responses may be implemented in the future.
 
-Chris Minnick, Eva Holland, Oleg Zelenyak, Aymen El Amri, David Sklar, Ed Tittel, Oleg Vasilev, John Paul Mueller, Nikolai Poleshchuk, Rubén Alba, Oliver Villar, Fabio Staiano, Alexander Gorelik, Roger "Buzz" King – Contributors of example book content.
-Notes
+5. Checking in Browser
 
-Ensure all containers are running before accessing the site.
+Books catalog: http://localhost:8080/books/
 
-Use /books/ to access the catalog.
+Book details: http://localhost:8080/books/{id}/
 
-Admin credentials can be created via:
-docker exec -it onlinelibrary-web-1 bash
-python manage.py createsuperuser
-This project is intended for educational purposes and follows the final exam requirements for Python-37 course.
-License
+Admin panel: http://localhost:8080/admin/
 
-This project is for academic purposes. All book content is sample data.
+6. Testing API in Postman
 
+Open Postman (or the Lightweight API Client).
 
+Create a new GET request.
+
+Enter the request URL:
+http://localhost:8080/books/
+Go to the Headers tab and add the following:
+Key Authorization
+Value
+Token 74d99a7c883d6c9671cd542f8ccb1e4d1eec
+Replace the token value with your own generated token from drf_create_token.
+5. Click Send.
+You should receive HTTP 200 OK and the HTML of the book catalog.
+6. For book details, change the URL to:
+http://localhost:8080/books/{id}/
+Replace {id} with the book ID, e.g., 1, 2, 3.
+
+Tip: Do not include extra line breaks or spaces in the token. The token must be in a single line.
+
+7. API Endpoints Overview
+Endpoint	Method	Description	Example Request (curl)
+/books/	GET	List all books in the catalog	curl -H "Authorization: Token 74d99a7c883d6c9671cd542f8ccb1e4d1d08beec" http://localhost:8080/books/
+/books/{id}/	GET	Get details of a book by its ID	curl -H "Authorization: Token 74d99a7c883d6c9671cd542f8ccb1e4d1d08beec" http://localhost:8080/books/1/
+
+Notes:
+
+{id} should be replaced with the actual book ID.
+
+Token authentication is required.
+
+Endpoints currently return HTML pages.
+
+8. Example Links for Verification
+Books Catalog
+
+Book 1 Details
+
+Book 2 Details
+
+Admin panel: http://localhost:8080/admin/
+
+This README ensures the instructor can test all API endpoints directly in Postman or via browser without errors. All commands are executed via Docker to guarantee the environment works consistently.
+## GitHub Branching Strategy
+
+- **main** — stable version with all exam requirements completed.
+- **dev** — development branch for implementing new features and testing.
+- **feature/<feature_name>** — temporary branches for specific tasks (e.g., `feature/api-endpoints`, `feature/ui-updates`).
+- All changes are merged into `dev` after testing, then into `main` for final submission.
+- Instructor can check commits and branches on GitHub:
+  https://github.com/OleksandrLapshin564/OnlineLibrary

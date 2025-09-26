@@ -6,9 +6,22 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("users/", include("apps.users.urls")),   # routes for users
-    path("books/", include("apps.books.urls")),   # new route for books
-    path("", include("apps.main.urls")),          # home page
+
+    # -----------------------
+    # Users
+    # -----------------------
+    path("users/", include("apps.users.urls")),        # HTML routes
+    path("api/users/", include("apps.users.urls_api")),  # REST API routes
+
+    # -----------------------
+    # Books
+    # -----------------------
+    path("books/", include("apps.books.urls")),        # HTML or API routes
+
+    # -----------------------
+    # Main (home page)
+    # -----------------------
+    path("", include("apps.main.urls")),
 
     # -----------------------
     # Auth: Change password

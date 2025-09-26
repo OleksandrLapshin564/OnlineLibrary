@@ -8,7 +8,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect("core:home")  # After logging in, it redirects to the main page
+            return redirect("main:home")  # home page after login
         else:
             return render(request, "users/login.html", {"error": "Invalid credentials"})
     return render(request, "users/login.html")
@@ -16,4 +16,4 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect("core:home")  # After exiting, it returns to the main screen
+    return redirect("main:home")  # home page after exit

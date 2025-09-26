@@ -1,59 +1,97 @@
-# HISTORY.md
+# Project History — Online Library Exam Project
 
-## Online Library – Exam Project (Python-37)
-
-### Branch: `exam_stage_books`
-
----
-
-### 2025-09-21
+## Version 1.0 — Initial Setup
+**Date:** 21.09.2025  
+**Author:** Oleksandr Lapshin  
+**Changes:**
 - Created Django project `OnlineLibrary`.
-- Configured Docker and `docker-compose` for web server and PostgreSQL.
-- Added basic `settings.py` settings and folder structure.
-- Connected Bootstrap via CDN for templates.
+- Created apps: `books`, `users`, `comments`.
+- Configured PostgreSQL database via Docker.
+- Integrated Bootstrap 5.3 for frontend styling.
+- Added `base.html` template for consistent layout.
 
 ---
 
-### 2025-09-22
-- Created `books` application.
-- Added `Book`, `Author`, `Genre` models.
-- Implemented admin panel for managing books, authors and genres.
-- Added uploading book covers and text files.
-- Developed templates:
-- `book_list.html` – displays book catalog.
-- `book_detail.html` – detailed view of the book.
-- Added routes to `urls.py` for the list and details of the book.
+## Version 1.1 — Books Models and Admin
+**Date:** 22.09.2025  
+**Changes:**
+- Added `Book` and `Author` models in `books/models.py`.
+- Configured Django admin for `Book` and `Author`.
+- Uploaded sample books, covers, and PDF files for testing.
+- Implemented `book_list` and `book_detail` views.
+- Added URL routing in `books/urls.py`.
 
 ---
 
-### 2025-09-23
-- Added handling of missing covers and descriptions in templates.
-- Fixed `truncatechars` for book descriptions.
-- Added displaying author biographies in templates (`book_list.html`, `book_detail.html`).
-- Checked the project's operation in Docker on port 8080.
-- Fixed errors with URLs (`404` on `/book/` → replaced with `/books/`).
+## Version 1.2 — User Authentication & Superuser
+**Date:** 23.09.2025  
+**Changes:**
+- Configured `users` app for login, logout, registration.
+- Created superuser `alex_lib_admin` via Docker.
+- Verified admin access at `/admin/`.
+- Set up token authentication with Django REST Framework.
 
 ---
 
-### 2025-09-24
-- Added commands to create a superuser and start the server in README.md.
-- Fixed templates for better adaptability and appearance.
-- Prepared a detailed **README.md** with a description of the functionality, Docker instructions and a list of endpoints.
-- Checked the operation of media files (covers, text files) in the browser.
-- Tested and clarified the biographies of the authors.
+## Version 1.3 — API Endpoints
+**Date:** 24.09.2025  
+**Changes:**
+- Created API endpoints for `books`:
+  - `/books/` → list all books
+  - `/books/<id>/` → book detail by ID
+- Added token authentication for API requests.
+- Verified endpoints in browser and Postman.
+- Ensured `curl` requests work with Authorization header:
+```bash
+curl -H "Authorization: Token <your_token>" http://localhost:8080/books/
+Version 1.4 — Docker Integration & Testing
 
----
+Date: 25.09.2025
+Changes:
 
-### 2025-09-25
-- Prepared README.md and HISTORY.md for the teacher.
-- Commits were made on the `exam_stage_books` branch.
-- All changes are saved on GitHub on the `exam_stage_books` branch.
+Verified Docker containers for web and database:
 
----
+onlinelibrary-web-1
 
-**Note**: Further stages include:
-- User registration and authentication.
-- Book search with filtering and sorting.
-- Online reading of books with progress.
-- Comments and discussion of books.
-- Full implementation of the REST API for the frontend and testing via Postman.
+onlinelibrary-db-1
+
+Added makemigrations and migrate commands in README for instructor testing.
+
+Added instructions for generating API tokens via drf_create_token.
+
+Confirmed API access works in Postman without errors.
+
+Version 1.5 — Final Documentation
+
+Date: 26.09.2025
+Changes:
+
+Created README.md with:
+
+Docker commands for running the project
+
+Instructions for migrations and superuser creation
+
+API endpoints table with examples
+
+Postman testing instructions
+
+Added project history and versioning in PROJECT_HISTORY.md.
+
+Prepared for instructor submission with verified endpoints and working HTML responses.
+
+Notes:
+
+All project changes were committed to GitHub for version control.
+
+The project can be tested entirely via Docker and browser.
+
+API token authentication is required for all endpoints, but responses are currently HTML pages for exam purposes.
+## GitHub Branching Strategy
+
+- **main** — stable version with all exam requirements completed.
+- **dev** — development branch for implementing new features and testing.
+- **feature/<feature_name>** — temporary branches for specific tasks (e.g., `feature/api-endpoints`, `feature/ui-updates`).
+- All changes are merged into `dev` after testing, then into `main` for final submission.
+- Instructor can check commits and branches on GitHub:
+  https://github.com/OleksandrLapshin564/OnlineLibrary
