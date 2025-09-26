@@ -108,3 +108,7 @@ A minimal CI workflow has now been added, which ensures a **successful (green) s
 
 All code, database migrations, and Docker setup remain fully functional.  
 Instructor can safely review the project, run it locally, and test API endpoints without issues.
+---
+
+> Note: The GitHub Actions CI workflow is included for reference; the main branch builds successfully, while some historical workflow runs may show failures. All project functionality can be tested locally via Docker as described above.
+
