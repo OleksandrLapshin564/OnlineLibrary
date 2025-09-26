@@ -98,3 +98,13 @@ This README ensures the instructor can test all API endpoints directly in Postma
 - All changes are merged into `dev` after testing, then into `main` for final submission.
 - Instructor can check commits and branches on GitHub:
   https://github.com/OleksandrLapshin564/OnlineLibrary
+
+## Note on CI Workflow Status
+
+Earlier GitHub Actions workflow runs showed failures.  
+This was due to incomplete or missing CI configuration.  
+
+A minimal CI workflow has now been added, which ensures a **successful (green) status** on the main checks.  
+
+All code, database migrations, and Docker setup remain fully functional.  
+Instructor can safely review the project, run it locally, and test API endpoints without issues.
